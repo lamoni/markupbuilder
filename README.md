@@ -8,7 +8,9 @@ Dependencies
 
 Considerations
 --------------
- - Implemented "Contained" tag creation?
+ - Implement "Contained" tag creation?
+ - Remove $elementName, $attributeName, and $attributes properties and instead just pass that data through
+    method arguments?
 
 Examples
 --------
