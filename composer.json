@@ -1,0 +1,22 @@
+{
+  "name": "lamoni/markupbuilder",
+  "description": "A PHP class used for building a single-level DOM object using method chaining and dynamic methods",
+  "license": "MIT",
+  "require": {
+    "php": ">= 5.4.16"
+  },
+  "authors": [
+    {
+      "name": "Lamoni Finlayson",
+      "email": "lamonif@gmail.com"
+    }
+  ],
+  "homepage": "https://github.com/lamoni/markupbuilder",
+  "keywords": [
+    "php",
+    "dom",
+    "markup",
+    "html",
+    "builder"
+  ]
+}
