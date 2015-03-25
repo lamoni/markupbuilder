@@ -5,251 +5,251 @@
  */
 class MarkupBuilder
 {
-    protected $htmlDocument;
+	protected $htmlDocument;
 
-    protected $htmlElement;
+	protected $htmlElement;
 
-    protected $elementName;
+	protected $elementName;
 
-    protected $attributeName;
+	protected $attributeName;
 
-    protected $action;
+	protected $action;
 
-    protected $arguments;
+	protected $arguments;
 
-    ///////////////////////////////////////////////////////////////////////
-    /*
-     * Magic Methods
-     *
-     * These are my overrides on the magic methods used to make this
-     * class work.
-     *
-     */////////////////////////////////////////////////////////////////////
-    public function __call($name, $arguments)
-    {
+	///////////////////////////////////////////////////////////////////////
+	/*
+	 * Magic Methods
+	 *
+	 * These are my overrides on the magic methods used to make this
+	 * class work.
+	 *
+	 */////////////////////////////////////////////////////////////////////
+	public function __call($name, $arguments)
+	{
 
-        $this->parseInputs($name, $arguments);
+		$this->parseInputs($name, $arguments);
 
-        $methodName = 'create' . $this->action;
+		$methodName = 'create' . $this->action;
 
-        $this->$methodName();
+		$this->$methodName();
 
-        return $this;
+		return $this;
 
-    }
+	}
 
-    public function __toString()
-    {
-        $outputMethod = "output{$this->action}";
+	public function __toString()
+	{
+		$outputMethod = "output{$this->action}";
 
-        $returnData = (string)$this->$outputMethod();
+		$returnData = (string)$this->$outputMethod();
 
-        $this->reset();
+		$this->reset();
 
-        return $returnData;
+		return $returnData;
 
-    }
+	}
 
-    public function parseInputs($name, $arguments)
-    {
+	public function parseInputs($name, $arguments)
+	{
 
-        if (\MatikHelpers::doesStringEndWithString($name, 'Open')) {
+		if (substr($name, 0-strlen('Open')) === 'Open') {
 
-            $this->setAction('Open');
+			$this->setAction('Open');
 
-        } elseif (\MatikHelpers::doesStringEndWithString($name, 'Close')) {
+		} elseif (substr($name, 0-strlen('Close')) === 'Close') {
 
-            $this->setAction('Close');
+			$this->setAction('Close');
 
-        } else {
+		} else {
 
-            $this->setAction('Attribute');
+			$this->setAction('Attribute');
 
-        }
+		}
 
-        if ($this->action === 'Attribute') {
+		if ($this->action === 'Attribute') {
 
-            $this->setAttributeName($name);
+			$this->setAttributeName($name);
 
-        } else {
+		} else {
 
-            $this->setElementName($name);
+			$this->setElementName($name);
 
-        }
+		}
 
-        $this->setArguments($arguments);
+		$this->setArguments($arguments);
 
-    }
+	}
 
-    public function reset()
-    {
+	public function reset()
+	{
 
-        $classVars = get_class_vars(get_class());
+		$classVars = get_class_vars(get_class());
 
-        foreach ($classVars as $classVarName => $classVarValue) {
+		foreach ($classVars as $classVarName => $classVarValue) {
 
-            unset($this->$classVarName);
+			unset($this->$classVarName);
 
-        }
+		}
 
-    }
+	}
 
-    ///////////////////////////////////////////////////////////////////////
-    /*
-     * Setters/Getters
-     *
-     * Y'all know what these are.
-     *
-     */////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////
+	/*
+	 * Setters/Getters
+	 *
+	 * Y'all know what these are.
+	 *
+	 */////////////////////////////////////////////////////////////////////
 
-    public function setAction($action)
-    {
+	public function setAction($action)
+	{
 
-        $this->action = $action;
+		$this->action = $action;
 
-    }
+	}
 
-    public function getAction()
-    {
+	public function getAction()
+	{
 
-        return $this->action;
+		return $this->action;
 
-    }
+	}
 
-    public function setAttributeName($attributeName)
-    {
+	public function setAttributeName($attributeName)
+	{
 
-        $this->attributeName = $attributeName;
+		$this->attributeName = $attributeName;
 
-    }
+	}
 
-    public function getAttributeName()
-    {
+	public function getAttributeName()
+	{
 
-        return $this->attributeName;
+		return $this->attributeName;
 
-    }
+	}
 
-    public function setArguments(array $arguments)
-    {
+	public function setArguments(array $arguments)
+	{
 
-        $this->arguments = $arguments;
+		$this->arguments = $arguments;
 
-    }
+	}
 
-    public function getArguments()
-    {
+	public function getArguments()
+	{
 
-        return $this->arguments;
+		return $this->arguments;
 
-    }
+	}
 
-    public function setElementName($name)
-    {
+	public function setElementName($name)
+	{
 
-        $this->elementName = str_replace($this->action, '', $name);
+		$this->elementName = str_replace($this->action, '', $name);
 
-    }
+	}
 
-    public function getElementName()
-    {
+	public function getElementName()
+	{
 
-        return $this->elementName;
+		return $this->elementName;
 
-    }
+	}
 
-    ///////////////////////////////////////////////////////////////////////
-    /*
-     * 'output' Methods
-     *
-     * These are called by the magic method __toString method.
-     * These are responsible for deciding what to output based on
-     * the 'action' (Open, Close, Attribute).
-     *
-     */////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////
+	/*
+	 * 'output' Methods
+	 *
+	 * These are called by the magic method __toString method.
+	 * These are responsible for deciding what to output based on
+	 * the 'action' (Open, Close, Attribute).
+	 *
+	 */////////////////////////////////////////////////////////////////////
 
-    public function outputAttribute()
-    {
+	public function outputAttribute()
+	{
 
-        return str_replace($this->createClose(), '', $this->htmlDocument->saveHTML());
+		return str_replace($this->createClose(), '', $this->htmlDocument->saveHTML());
 
-    }
+	}
 
-    public function outputOpen()
-    {
+	public function outputOpen()
+	{
 
-        return str_replace($this->createClose(), '', $this->htmlDocument->saveHTML());
+		return str_replace($this->createClose(), '', $this->htmlDocument->saveHTML());
 
-    }
+	}
 
-    public function outputClose()
-    {
+	public function outputClose()
+	{
 
-        if (empty($this->htmlDocument)) {
-            return $this->createClose();
-        }
+		if (empty($this->htmlDocument)) {
+			return $this->createClose();
+		}
 
-        return $this->htmlDocument->saveHTML();
+		return $this->htmlDocument->saveHTML();
 
-    }
+	}
 
-    ///////////////////////////////////////////////////////////////////////
-    /*
-     * 'create' Methods
-     *
-     * These are called by the magic method __call.  They are responsible
-     * for generating the markup depending on if 'Open' or 'Close' are
-     * in the name of the function call attempted on our MarkupBuilder
-     * object.
-     *
-     */////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////
+	/*
+	 * 'create' Methods
+	 *
+	 * These are called by the magic method __call.  They are responsible
+	 * for generating the markup depending on if 'Open' or 'Close' are
+	 * in the name of the function call attempted on our MarkupBuilder
+	 * object.
+	 *
+	 */////////////////////////////////////////////////////////////////////
 
-    public function createAttribute()
-    {
+	public function createAttribute()
+	{
 
-        $this->createCustomAttribute($this->attributeName, $this->arguments);
+		$this->createCustomAttribute($this->attributeName, $this->arguments);
 
-    }
+	}
 
-    public function createCustomAttribute($name, $arguments)
-    {
+	public function createCustomAttribute($name, $arguments)
+	{
 
-        $name = str_replace('_', '-', $name);
+		$name = str_replace('_', '-', $name);
 
-        $createAttribute = $this->htmlDocument->createAttribute($name);
+		$createAttribute = $this->htmlDocument->createAttribute($name);
 
-        if (count($arguments)) {
+		if (count($arguments)) {
 
-            $createAttribute->value = $arguments[0];
+			$createAttribute->value = $arguments[0];
 
-        }
+		}
 
-        $this->htmlElement->appendChild($createAttribute);
+		$this->htmlElement->appendChild($createAttribute);
 
-    }
+	}
 
-    public function createOpen()
-    {
+	public function createOpen()
+	{
 
-        $this->htmlDocument = new \DOMDocument();
+		$this->htmlDocument = new \DOMDocument();
 
-        $this->htmlElement = $this->htmlDocument->createElement($this->elementName);
+		$this->htmlElement = $this->htmlDocument->createElement($this->elementName);
 
-        $this->htmlDocument->appendChild($this->htmlElement);
+		$this->htmlDocument->appendChild($this->htmlElement);
 
-        if (count($this->getArguments())) {
+		if (count($this->getArguments())) {
 
-            $this->createCustomAttribute('id', $this->arguments);
+			$this->createCustomAttribute('id', $this->arguments);
 
-        }
+		}
 
-    }
+	}
 
-    public function createClose()
-    {
+	public function createClose()
+	{
 
-        return "</{$this->elementName}>";
+		return "</{$this->elementName}>";
 
-    }
+	}
 
 }
